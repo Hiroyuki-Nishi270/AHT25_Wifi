@@ -1,11 +1,10 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <esp_mac.h>
-#include "AHT25.h"
 
 /** Wifi setting value */
 struct{
-  long NextTime = 0;
+  unsigned long NextTime = 0;
   int Status = 0;
   int TryCount = 0;
 } WifiValue;
@@ -80,9 +79,6 @@ void WifiAndWeb(){
 void serveWeb(){
   server.on("/", HTTP_GET, [](){
 
-    /** 温湿度計測 */
-    AHT25();
-
     //HTML記述
     HTML = "";
     HTML += "<!DOCTYPE html>";
@@ -109,9 +105,6 @@ void serveWeb(){
 
   server.on("/json", HTTP_GET, [](){
 
-    /** 温湿度計測 */
-    AHT25();
-
     //JSON記述
     json = "";
     json += "{";
@@ -122,7 +115,7 @@ void serveWeb(){
     json += "\"temperature\" : ";
     json += AHT25value.temperature;
     json += ",";
-    json += "\"disconfort index\" : ";
+    json += "\"disconfortIndex\" : ";
     json += AHT25value.discomfortIndex;
     json += "}";
     json += "}";
@@ -131,6 +124,7 @@ void serveWeb(){
     Serial.println("Requested json data");
     Serial.print("json data = ");Serial.println(json);
     Serial.println("-------------------");
+    server.sendHeader("Access-Control-Allow-Origin", "*");
     server.send(200, "text/json", json); // 値をクライアントに返す
 
   });

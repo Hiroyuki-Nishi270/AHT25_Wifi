@@ -6,8 +6,8 @@ void setup() {
   initialSerial();
 
   /** Wifi and Web Server initializing */
-  // アクセスされた際に行う関数を登録する
   serveWeb();
+
 }
 
 void loop() {
@@ -15,6 +15,10 @@ void loop() {
   /** Auto Reset */
   autoReset();
 
+  /** Get tempereture and humidy values from AHT25 */
+  AHT25();
+  
   /** Wifi and Web Server */
   WifiAndWeb();
+
 }
